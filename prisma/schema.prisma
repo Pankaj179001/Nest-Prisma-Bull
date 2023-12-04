@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model user {
+  id       Int    @id @default(autoincrement())
+  password String
+  username String @unique
+  token String @default("null")
+  refreshToken String @default("null")
+  purchased_books books[]
+  profile profile?
+  
+}
+
+model books {
+  id     Int    @id @default(autoincrement())
+  title  String
+  body   String
+  authorId Int 
+  author user @relation(fields: [authorId],references: [id])
+}
+
+model profile{
+  id Int @id @default(autoincrement())
+  state String
+  city String
+  qualification String
+  userId Int @unique 
+  user user @relation(fields: [userId],references: [id])
+}
+//one to one relation must have unique foreign key field
